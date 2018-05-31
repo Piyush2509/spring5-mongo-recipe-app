@@ -9,7 +9,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @Ignore
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class Spring5RecipeAppApplicationTests {
+public class Spring5MongoRecipeAppApplicationTests {
 
 	@Test
 	public void contextLoads() {
