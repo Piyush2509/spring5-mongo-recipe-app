@@ -9,7 +9,6 @@ import org.junit.Test;
 
 import guru.springframework.commands.IngredientCommand;
 import guru.springframework.domain.Ingredient;
-import guru.springframework.domain.Recipe;
 import guru.springframework.domain.UnitOfMeasure;
 
 /**
@@ -17,7 +16,6 @@ import guru.springframework.domain.UnitOfMeasure;
  */
 public class IngredientToIngredientCommandTest {
 
-	public static final Recipe RECIPE = new Recipe();
 	public static final BigDecimal AMOUNT = new BigDecimal("1");
 	public static final String DESCRIPTION = "Cheeseburger";
 	public static final String UOM_ID = "2";
@@ -45,7 +43,6 @@ public class IngredientToIngredientCommandTest {
 		// given
 		Ingredient ingredient = new Ingredient();
 		ingredient.setId(ID_VALUE);
-		ingredient.setRecipe(RECIPE);
 		ingredient.setAmount(AMOUNT);
 		ingredient.setDescription(DESCRIPTION);
 		ingredient.setUom(null);
@@ -65,7 +62,6 @@ public class IngredientToIngredientCommandTest {
 		// given
 		Ingredient ingredient = new Ingredient();
 		ingredient.setId(ID_VALUE);
-		ingredient.setRecipe(RECIPE);
 		ingredient.setAmount(AMOUNT);
 		ingredient.setDescription(DESCRIPTION);
 		UnitOfMeasure uom = new UnitOfMeasure();

@@ -83,8 +83,8 @@ public class RecipeController {
 
 		Set<CategoryCommand> categoryList = categoryService.listAllCategories();
 		List<String> list = Arrays.asList(categoryArray);
-		Set<CategoryCommand> recipeCategories = categoryList.stream()
-				.filter(category -> list.contains(category.getId().toString())).collect(Collectors.toSet());
+		List<CategoryCommand> recipeCategories = categoryList.stream()
+				.filter(category -> list.contains(category.getId().toString())).collect(Collectors.toList());
 		command.setCategories(recipeCategories);
 		RecipeCommand savedCommand = recipeService.saveRecipeCommand(command);
 		return "redirect:/recipe/" + savedCommand.getId() + "/show";

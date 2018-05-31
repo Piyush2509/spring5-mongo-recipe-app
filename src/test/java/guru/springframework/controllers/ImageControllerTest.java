@@ -105,8 +105,7 @@ public class ImageControllerTest {
 		byte[] responseBytes = response.getContentAsByteArray();
 		assertEquals(s.getBytes().length, responseBytes.length);
 	}
-
-	@Ignore
+	
 	@Test
 	public void testGetRecipeImageNumberFormatException() throws Exception {
 		mockMvc.perform(get("/recipe/xyz/recipeimage")).andExpect(status().isBadRequest())
