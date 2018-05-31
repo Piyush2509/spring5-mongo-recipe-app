@@ -36,6 +36,10 @@ jobs:
           paths:
             - ~/.m2
           key: v1-dependencies-{{ checksum "build.gradle" }}
+          
+      - run:
+          name: chmod permissions
+          command: chmod +x ./gradlew
       
       # run tests! and gen code coverage
       - run: ./gradlew clean test jacocoTestReport
