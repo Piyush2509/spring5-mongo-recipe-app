@@ -9,9 +9,9 @@ import org.junit.Test;
  * Created by piyush.b.kumar on May 21, 2018.
  */
 public class CategoryTest {
- 
+
 	Category category;
-	
+
 	@Before
 	public void setUp() {
 		category = new Category();
@@ -19,9 +19,9 @@ public class CategoryTest {
 
 	@Test
 	public void testGetId() throws Exception {
-		Long idValue = 4l;
+		String idValue = "4";
 		category.setId(idValue);
-		assertEquals(idValue, category.getId());;
+		assertEquals(idValue, category.getId());
 	}
 
 	@Test

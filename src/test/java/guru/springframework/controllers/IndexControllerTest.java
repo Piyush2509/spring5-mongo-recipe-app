@@ -29,21 +29,21 @@ import guru.springframework.services.RecipeService;
  * Created by piyush.b.kumar on May 21, 2018.
  */
 public class IndexControllerTest {
-	
+
 	@Mock
 	RecipeService recipeService;
-	
+
 	@Mock
 	Model model;
-	
+
 	IndexController indexController;
-	
+
 	@Before
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
 		indexController = new IndexController(recipeService);
 	}
-	
+
 	@Test
 	public void testMockMVC() throws Exception {
 		MockMvc mockMvc = MockMvcBuilders.standaloneSetup(indexController).build();
@@ -57,17 +57,17 @@ public class IndexControllerTest {
 		Set<Recipe> recipes = new HashSet<>();
 		recipes.add(new Recipe());
 		Recipe recipe = new Recipe();
-		recipe.setId(1L);
+		recipe.setId("1");
 		recipes.add(recipe);
-		
+
 		when(recipeService.getRecipes()).thenReturn(recipes);
-		
+
 		@SuppressWarnings("unchecked")
 		ArgumentCaptor<Set<Recipe>> argumentCaptor = ArgumentCaptor.forClass(Set.class);
-		
+
 		// when
 		String viewName = indexController.getIndexPage(model);
-		
+
 		// then
 		assertEquals("index", viewName);
 		verify(recipeService, times(1)).getRecipes();

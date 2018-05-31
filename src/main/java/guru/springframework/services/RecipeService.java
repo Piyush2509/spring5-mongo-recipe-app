@@ -9,15 +9,15 @@ import guru.springframework.domain.Recipe;
  * Created by piyush.b.kumar on May 21, 2018.
  */
 public interface RecipeService {
-	
+
 	Set<Recipe> getRecipes();
-	
-	Recipe findById(Long l);
-	
-	RecipeCommand findCommandById(Long l);
-	
+
+	Recipe findById(String id);
+
+	RecipeCommand findCommandById(String id);
+
 	RecipeCommand saveRecipeCommand(RecipeCommand command);
-	
-	void deleteById(Long l);
+
+	void deleteById(String id);
 
 }

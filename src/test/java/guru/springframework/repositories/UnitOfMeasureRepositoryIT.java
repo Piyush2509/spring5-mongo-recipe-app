@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.Optional;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import guru.springframework.domain.UnitOfMeasure;
 /**
  * Created by piyush.b.kumar on May 22, 2018.
  */
+@Ignore
 @RunWith(SpringRunner.class)
 @DataJpaTest
 public class UnitOfMeasureRepositoryIT {

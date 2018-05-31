@@ -41,11 +41,11 @@ public class CategoryServiceImplTest {
 		// given
 		Set<Category> categories = new HashSet<>();
 		Category category1 = new Category();
-		category1.setId(1L);
+		category1.setId("1");
 		categories.add(category1);
 
 		Category category2 = new Category();
-		category2.setId(2L);
+		category2.setId("2");
 		categories.add(category2);
 
 		// when

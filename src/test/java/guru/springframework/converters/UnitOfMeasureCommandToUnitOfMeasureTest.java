@@ -13,7 +13,7 @@ import guru.springframework.domain.UnitOfMeasure;
  */
 public class UnitOfMeasureCommandToUnitOfMeasureTest {
 
-	public static final Long ID_VALUE = 1L;
+	public static final String ID_VALUE = "1";
 	public static final String DESCRIPTION = "description";
 
 	UnitOfMeasureCommandToUnitOfMeasure converter;

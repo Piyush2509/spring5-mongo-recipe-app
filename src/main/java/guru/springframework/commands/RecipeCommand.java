@@ -23,7 +23,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class RecipeCommand {
 
-	private Long id;
+	private String id;
 	@NotBlank
 	@Size(min = 3, max = 255)
 	private String description;

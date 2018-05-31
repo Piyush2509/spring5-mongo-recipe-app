@@ -7,9 +7,9 @@ import guru.springframework.commands.IngredientCommand;
  */
 public interface IngredientService {
 
-	IngredientCommand findByRecipeIdAndIngredientId(Long recipeId, Long ingredientId);
+	IngredientCommand findByRecipeIdAndIngredientId(String recipeId, String ingredientId);
 
 	IngredientCommand saveIngredientCommand(IngredientCommand command);
 
-	void deleteRecipeIngredient(Long recipeId, Long ingredientId);
+	void deleteRecipeIngredient(String recipeId, String ingredientId);
 }

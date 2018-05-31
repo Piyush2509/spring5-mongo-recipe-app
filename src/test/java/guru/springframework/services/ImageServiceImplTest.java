@@ -2,7 +2,7 @@ package guru.springframework.services;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -38,7 +38,7 @@ public class ImageServiceImplTest {
 	@Test
 	public void saveRecipeImageTest() throws Exception {
 		// given
-		Long id = 1L;
+		String id = "1";
 		MultipartFile multipartFile = new MockMultipartFile("imagefile", "testing.txt", "text/plain",
 				"Spring Framework Guru".getBytes());
 
@@ -46,7 +46,7 @@ public class ImageServiceImplTest {
 		recipe.setId(id);
 		Optional<Recipe> recipeOptional = Optional.of(recipe);
 
-		when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+		when(recipeRepository.findById(anyString())).thenReturn(recipeOptional);
 
 		ArgumentCaptor<Recipe> argumentCaptor = ArgumentCaptor.forClass(Recipe.class);
 

@@ -23,7 +23,7 @@ public class ImageServiceImpl implements ImageService {
 	}
 
 	@Override
-	public void saveRecipeImage(Long recipeId, MultipartFile imageFile) {
+	public void saveRecipeImage(String recipeId, MultipartFile imageFile) {
 		try {
 			Recipe recipe = recipeRepository.findById(recipeId).get();
 			Byte[] byteObjects = new Byte[imageFile.getBytes().length];

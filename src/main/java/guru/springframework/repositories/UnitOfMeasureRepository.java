@@ -9,7 +9,7 @@ import guru.springframework.domain.UnitOfMeasure;
 /**
  * Created by piyush.b.kumar on May 18, 2018.
  */
-public interface UnitOfMeasureRepository extends CrudRepository<UnitOfMeasure, Long> {
+public interface UnitOfMeasureRepository extends CrudRepository<UnitOfMeasure, String> {
 	
 	Optional<UnitOfMeasure> findByDescription(String description);
 
