@@ -36,7 +36,7 @@ public class IngredientController {
 	@GetMapping("/recipe/{recipeId}/ingredients")
 	public String listIngredients(@PathVariable String recipeId, Model model) {
 		log.debug("Getting ingredient list for recipe id: " + recipeId);
-		model.addAttribute("recipe", recipeService.findCommandById(recipeId));
+		model.addAttribute("recipe", recipeService.findCommandById(recipeId).block());
 		return "recipe/ingredient/list";
 	}
 
@@ -52,7 +52,7 @@ public class IngredientController {
 		log.debug("Getting new ingredient for a recipe form");
 		// make sure we have a good recipe id value
 		@SuppressWarnings("unused")
-		RecipeCommand recipeCommand = recipeService.findCommandById(recipeId);
+		RecipeCommand recipeCommand = recipeService.findCommandById(recipeId).block();
 
 		// need to return back parent id for hidden form property
 		IngredientCommand ingredientCommand = new IngredientCommand();

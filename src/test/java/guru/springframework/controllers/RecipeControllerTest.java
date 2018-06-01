@@ -27,6 +27,7 @@ import guru.springframework.domain.Recipe;
 import guru.springframework.exceptions.NotFoundException;
 import guru.springframework.services.CategoryService;
 import guru.springframework.services.RecipeService;
+import reactor.core.publisher.Mono;
 
 /**
  * Created by piyush.b.kumar on May 22, 2018.
@@ -56,7 +57,7 @@ public class RecipeControllerTest {
 		Recipe recipe = new Recipe();
 		recipe.setId("1");
 
-		when(recipeService.findById(anyString())).thenReturn(recipe);
+		when(recipeService.findById(anyString())).thenReturn(Mono.just(recipe));
 
 		mockMvc.perform(get("/recipe/1/show")).andExpect(status().isOk()).andExpect(view().name("recipe/show"))
 				.andExpect(model().attributeExists("recipe"));
@@ -84,7 +85,7 @@ public class RecipeControllerTest {
 		RecipeCommand command = new RecipeCommand();
 		command.setId("2");
 
-		when(recipeService.findCommandById(anyString())).thenReturn(command);
+		when(recipeService.findCommandById(anyString())).thenReturn(Mono.just(command));
 		when(categoryService.listAllCategories()).thenReturn(new HashSet<>());
 
 		mockMvc.perform(get("/recipe/1/update")).andExpect(status().isOk()).andExpect(view().name("recipe/recipeform"))
@@ -99,7 +100,7 @@ public class RecipeControllerTest {
 		RecipeCommand command = new RecipeCommand();
 		command.setId("2");
 
-		when(recipeService.saveRecipeCommand(any())).thenReturn(command);
+		when(recipeService.saveRecipeCommand(any())).thenReturn(Mono.just(command));
 
 		mockMvc.perform(post("/recipe").contentType(MediaType.APPLICATION_FORM_URLENCODED).param("id", "")
 				.param("description", "some string").param("directions", "some directions").param("categoryArray", ""))
@@ -111,7 +112,7 @@ public class RecipeControllerTest {
 		RecipeCommand command = new RecipeCommand();
 		command.setId("2");
 
-		when(recipeService.saveRecipeCommand(any())).thenReturn(command);
+		when(recipeService.saveRecipeCommand(any())).thenReturn(Mono.just(command));
 
 		mockMvc.perform(post("/recipe").contentType(MediaType.APPLICATION_FORM_URLENCODED).param("id", "")
 				.param("categoryArray", "")).andExpect(status().isOk()).andExpect(model().attributeExists("recipe"))
@@ -120,6 +121,8 @@ public class RecipeControllerTest {
 
 	@Test
 	public void testDeleteById() throws Exception {
+		when(recipeService.deleteById(anyString())).thenReturn(Mono.empty());
+
 		mockMvc.perform(get("/recipe/1/delete")).andExpect(status().is3xxRedirection())
 				.andExpect(view().name("redirect:/"));
 

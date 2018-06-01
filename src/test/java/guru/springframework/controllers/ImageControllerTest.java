@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import guru.springframework.commands.RecipeCommand;
 import guru.springframework.services.ImageService;
 import guru.springframework.services.RecipeService;
+import reactor.core.publisher.Mono;
 
 /**
  * Created by piyush.b.kumar on May 24, 2018.
@@ -54,7 +55,7 @@ public class ImageControllerTest {
 		RecipeCommand recipeCommand = new RecipeCommand();
 		recipeCommand.setId("1");
 
-		when(recipeService.findCommandById(anyString())).thenReturn(recipeCommand);
+		when(recipeService.findCommandById(anyString())).thenReturn(Mono.just(recipeCommand));
 
 		// when
 		mockMvc.perform(get("/recipe/1/image")).andExpect(status().isOk()).andExpect(model().attributeExists("recipe"));
@@ -93,7 +94,7 @@ public class ImageControllerTest {
 
 		recipeCommand.setImage(bytesBoxed);
 
-		when(recipeService.findCommandById(anyString())).thenReturn(recipeCommand);
+		when(recipeService.findCommandById(anyString())).thenReturn(Mono.just(recipeCommand));
 
 		// when
 		MockHttpServletResponse response = mockMvc.perform(get("/recipe/1/recipeimage")).andExpect(status().isOk())
