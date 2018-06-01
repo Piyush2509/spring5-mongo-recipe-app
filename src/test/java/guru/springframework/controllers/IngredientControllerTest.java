@@ -7,8 +7,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import java.util.HashSet;
-
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.times;
@@ -24,9 +22,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import guru.springframework.commands.IngredientCommand;
 import guru.springframework.commands.RecipeCommand;
+import guru.springframework.commands.UnitOfMeasureCommand;
 import guru.springframework.services.IngredientService;
 import guru.springframework.services.RecipeService;
 import guru.springframework.services.UnitOfMeasureService;
+import reactor.core.publisher.Flux;
 
 public class IngredientControllerTest {
 
@@ -86,7 +86,7 @@ public class IngredientControllerTest {
 
 		// when
 		when(recipeService.findCommandById(anyString())).thenReturn(recipeCommand);
-		when(unitOfMeasureService.listAllUoms()).thenReturn(new HashSet<>());
+		when(unitOfMeasureService.listAllUoms()).thenReturn(Flux.just(new UnitOfMeasureCommand()));
 
 		// then
 		mockMvc.perform(get("/recipe/1/ingredient/new")).andExpect(status().isOk())
@@ -103,7 +103,7 @@ public class IngredientControllerTest {
 
 		// when
 		when(ingredientService.findByRecipeIdAndIngredientId(anyString(), anyString())).thenReturn(ingredientCommand);
-		when(unitOfMeasureService.listAllUoms()).thenReturn(new HashSet<>());
+		when(unitOfMeasureService.listAllUoms()).thenReturn(Flux.just(new UnitOfMeasureCommand()));
 
 		// then
 		mockMvc.perform(get("/recipe/1/ingredient/2/update")).andExpect(status().isOk())

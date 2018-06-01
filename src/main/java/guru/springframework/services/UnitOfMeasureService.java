@@ -1,14 +1,13 @@
 package guru.springframework.services;
 
-import java.util.Set;
-
 import guru.springframework.commands.UnitOfMeasureCommand;
+import reactor.core.publisher.Flux;
 
 /**
  * Created by piyush.b.kumar on May 24, 2018.
  */
 public interface UnitOfMeasureService {
 
-	Set<UnitOfMeasureCommand> listAllUoms();
+	Flux<UnitOfMeasureCommand> listAllUoms();
 
 }
