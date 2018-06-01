@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
@@ -14,7 +13,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -104,12 +102,6 @@ public class ImageControllerTest {
 		// then
 		byte[] responseBytes = response.getContentAsByteArray();
 		assertEquals(s.getBytes().length, responseBytes.length);
-	}
-	
-	@Test
-	public void testGetRecipeImageNumberFormatException() throws Exception {
-		mockMvc.perform(get("/recipe/xyz/recipeimage")).andExpect(status().isBadRequest())
-				.andExpect(view().name("400error"));
 	}
 
 }

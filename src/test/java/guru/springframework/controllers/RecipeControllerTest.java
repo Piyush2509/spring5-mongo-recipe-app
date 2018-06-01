@@ -15,7 +15,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -68,11 +67,6 @@ public class RecipeControllerTest {
 		when(recipeService.findById(anyString())).thenThrow(NotFoundException.class);
 
 		mockMvc.perform(get("/recipe/1/show")).andExpect(status().isNotFound()).andExpect(view().name("404error"));
-	}
-
-	@Test
-	public void testShowByIdNumberFormatException() throws Exception {
-		mockMvc.perform(get("/recipe/asdf/show")).andExpect(status().isBadRequest()).andExpect(view().name("400error"));
 	}
 
 	@Test
