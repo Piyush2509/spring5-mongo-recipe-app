@@ -27,6 +27,7 @@ import guru.springframework.services.IngredientService;
 import guru.springframework.services.RecipeService;
 import guru.springframework.services.UnitOfMeasureService;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public class IngredientControllerTest {
 
@@ -71,7 +72,8 @@ public class IngredientControllerTest {
 		IngredientCommand ingredientCommand = new IngredientCommand();
 
 		// when
-		when(ingredientService.findByRecipeIdAndIngredientId(anyString(), anyString())).thenReturn(ingredientCommand);
+		when(ingredientService.findByRecipeIdAndIngredientId(anyString(), anyString()))
+				.thenReturn(Mono.just(ingredientCommand));
 
 		// then
 		mockMvc.perform(get("/recipe/1/ingredient/2/show")).andExpect(status().isOk())
@@ -102,7 +104,8 @@ public class IngredientControllerTest {
 		IngredientCommand ingredientCommand = new IngredientCommand();
 
 		// when
-		when(ingredientService.findByRecipeIdAndIngredientId(anyString(), anyString())).thenReturn(ingredientCommand);
+		when(ingredientService.findByRecipeIdAndIngredientId(anyString(), anyString()))
+				.thenReturn(Mono.just(ingredientCommand));
 		when(unitOfMeasureService.listAllUoms()).thenReturn(Flux.just(new UnitOfMeasureCommand()));
 
 		// then
@@ -119,7 +122,7 @@ public class IngredientControllerTest {
 		ingredientCommand.setRecipeId("2");
 
 		// when
-		when(ingredientService.saveIngredientCommand(any())).thenReturn(ingredientCommand);
+		when(ingredientService.saveIngredientCommand(any())).thenReturn(Mono.just(ingredientCommand));
 
 		// then
 		mockMvc.perform(post("/recipe/2/ingredient").contentType(MediaType.APPLICATION_FORM_URLENCODED))
@@ -128,6 +131,9 @@ public class IngredientControllerTest {
 
 	@Test
 	public void testDeleteRecipeIngredient() throws Exception {
+		// when
+		when(ingredientService.deleteRecipeIngredient(anyString(), anyString())).thenReturn(Mono.empty());
+
 		// then
 		mockMvc.perform(get("/recipe/2/ingredient/3/delete")).andExpect(status().is3xxRedirection())
 				.andExpect(view().name("redirect:/recipe/2/ingredients"));

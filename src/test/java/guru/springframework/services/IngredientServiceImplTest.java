@@ -22,7 +22,9 @@ import guru.springframework.converters.UnitOfMeasureToUnitOfMeasureCommand;
 import guru.springframework.domain.Ingredient;
 import guru.springframework.domain.Recipe;
 import guru.springframework.repositories.RecipeRepository;
-import guru.springframework.repositories.UnitOfMeasureRepository;
+import guru.springframework.repositories.reactive.RecipeReactiveRepository;
+import guru.springframework.repositories.reactive.UnitOfMeasureReactiveRepository;
+import reactor.core.publisher.Mono;
 
 /**
  * Created by piyush.b.kumar on May 24, 2018.
@@ -38,7 +40,10 @@ public class IngredientServiceImplTest {
 	RecipeRepository recipeRepository;
 
 	@Mock
-	UnitOfMeasureRepository unitOfMeasureRepository;
+	RecipeReactiveRepository recipeReactiveRepository;
+
+	@Mock
+	UnitOfMeasureReactiveRepository unitOfMeasureReactiveRepository;
 
 	public IngredientServiceImplTest() {
 		this.ingredientToIngredientCommand = new IngredientToIngredientCommand(
@@ -50,8 +55,8 @@ public class IngredientServiceImplTest {
 	@Before
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
-		ingredientService = new IngredientServiceImpl(recipeRepository, unitOfMeasureRepository,
-				ingredientToIngredientCommand, ingredientCommandToIngredient);
+		ingredientService = new IngredientServiceImpl(recipeRepository, recipeReactiveRepository,
+				unitOfMeasureReactiveRepository, ingredientToIngredientCommand, ingredientCommandToIngredient);
 	}
 
 	@Test
@@ -77,17 +82,15 @@ public class IngredientServiceImplTest {
 		recipe.addIngredient(ingredient2);
 		recipe.addIngredient(ingredient3);
 
-		Optional<Recipe> recipeOptional = Optional.of(recipe);
-
-		when(recipeRepository.findById(anyString())).thenReturn(recipeOptional);
+		when(recipeReactiveRepository.findById(anyString())).thenReturn(Mono.just(recipe));
 
 		// when
-		IngredientCommand ingredientCommand = ingredientService.findByRecipeIdAndIngredientId("1", "3");
+		IngredientCommand ingredientCommand = ingredientService.findByRecipeIdAndIngredientId("1", "3").block();
 
 		// then
 		assertEquals("3", ingredientCommand.getId());
 		assertEquals("1", ingredientCommand.getRecipeId());
-		verify(recipeRepository, times(1)).findById(anyString());
+		verify(recipeReactiveRepository, times(1)).findById(anyString());
 	}
 
 	@Test
@@ -104,15 +107,15 @@ public class IngredientServiceImplTest {
 		savedRecipe.getIngredients().iterator().next().setId("3");
 
 		when(recipeRepository.findById(anyString())).thenReturn(recipeOptional);
-		when(recipeRepository.save(any())).thenReturn(savedRecipe);
+		when(recipeReactiveRepository.save(any())).thenReturn(Mono.just(savedRecipe));
 
 		// when
-		IngredientCommand savedCommand = ingredientService.saveIngredientCommand(command);
+		IngredientCommand savedCommand = ingredientService.saveIngredientCommand(command).block();
 
 		// then
 		assertEquals("3", savedCommand.getId());
 		verify(recipeRepository, times(1)).findById(anyString());
-		verify(recipeRepository, times(1)).save(any(Recipe.class));
+		verify(recipeReactiveRepository, times(1)).save(any(Recipe.class));
 	}
 
 	@Test
