@@ -71,6 +71,8 @@ public class ImageControllerTest {
 				"Spring Framework Guru".getBytes());
 
 		// when
+		when(imageService.saveRecipeImage(anyString(), any())).thenReturn(Mono.empty());
+		
 		mockMvc.perform(multipart("/recipe/1/image").file(multipartFile)).andExpect(status().is3xxRedirection())
 				.andExpect(header().string("Location", "/recipe/1/show"));
 

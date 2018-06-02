@@ -100,7 +100,10 @@ public class RecipeServiceImplTest {
 	@Test
 	public void deleteByIdTest() throws Exception {
 		String idToDelete = "2";
-		recipeService.deleteById(idToDelete).block();
+
+		when(recipeReactiveRepository.deleteById(anyString())).thenReturn(Mono.empty());
+
+		recipeService.deleteById(idToDelete);
 
 		verify(recipeReactiveRepository, times(1)).deleteById(anyString());
 	}
