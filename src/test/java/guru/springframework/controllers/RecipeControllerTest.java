@@ -7,8 +7,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import java.util.HashSet;
-
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.times;
@@ -23,11 +21,13 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import guru.springframework.commands.CategoryCommand;
 import guru.springframework.commands.RecipeCommand;
 import guru.springframework.domain.Recipe;
 import guru.springframework.exceptions.NotFoundException;
 import guru.springframework.services.CategoryService;
 import guru.springframework.services.RecipeService;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -74,7 +74,7 @@ public class RecipeControllerTest {
 
 	@Test
 	public void testNewRecipe() throws Exception {
-		when(categoryService.listAllCategories()).thenReturn(new HashSet<>());
+		when(categoryService.listAllCategories()).thenReturn(Flux.just(new CategoryCommand()));
 
 		mockMvc.perform(get("/recipe/new")).andExpect(status().isOk()).andExpect(view().name("recipe/recipeform"))
 				.andExpect(model().attributeExists("recipe")).andExpect(model().attributeExists("categoryList"));
@@ -88,7 +88,7 @@ public class RecipeControllerTest {
 		command.setId("2");
 
 		when(recipeService.findCommandById(anyString())).thenReturn(Mono.just(command));
-		when(categoryService.listAllCategories()).thenReturn(new HashSet<>());
+		when(categoryService.listAllCategories()).thenReturn(Flux.just(new CategoryCommand()));
 
 		mockMvc.perform(get("/recipe/1/update")).andExpect(status().isOk()).andExpect(view().name("recipe/recipeform"))
 				.andExpect(model().attributeExists("recipe")).andExpect(model().attributeExists("categoryList"));

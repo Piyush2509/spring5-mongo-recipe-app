@@ -2,7 +2,6 @@ package guru.springframework.controllers;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Controller;
@@ -21,6 +20,7 @@ import guru.springframework.commands.RecipeCommand;
 import guru.springframework.services.CategoryService;
 import guru.springframework.services.RecipeService;
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
 
 /**
  * Created by piyush.b.kumar on May 22, 2018.
@@ -58,7 +58,6 @@ public class RecipeController {
 	public String newRecipe(Model model) {
 		log.debug("Getting new recipe form");
 		model.addAttribute("recipe", new RecipeCommand());
-		model.addAttribute("categoryList", categoryService.listAllCategories());
 		return RECIPE_RECIPEFORM_URL;
 	}
 
@@ -66,16 +65,16 @@ public class RecipeController {
 	public String updateRecipe(@PathVariable String id, Model model) {
 		log.debug("Getting recipe form for update for id: " + id);
 		model.addAttribute("recipe", recipeService.findCommandById(id).block());
-		model.addAttribute("categoryList", categoryService.listAllCategories());
 		return RECIPE_RECIPEFORM_URL;
 	}
 
 	@PostMapping("recipe")
-	public String saveRecipe(@ModelAttribute("recipe") RecipeCommand command, @RequestParam(value="categoryArray", required=false) String[] categoryArray) {
+	public String saveRecipe(@ModelAttribute("recipe") RecipeCommand command,
+			@RequestParam(value = "categoryArray", required = false) String[] categoryArray) {
 		log.debug("Saving or updating recipe");
-		
+
 		webDataBinder.validate();
-		BindingResult bindingResult = webDataBinder.getBindingResult(); 
+		BindingResult bindingResult = webDataBinder.getBindingResult();
 
 		if (bindingResult.hasErrors()) {
 			bindingResult.getAllErrors().forEach(objectError -> {
@@ -85,7 +84,7 @@ public class RecipeController {
 			return RECIPE_RECIPEFORM_URL;
 		}
 
-		Set<CategoryCommand> categoryList = categoryService.listAllCategories();
+		List<CategoryCommand> categoryList = categoryService.listAllCategories().collectList().block();
 		List<String> list = Arrays.asList(categoryArray);
 		List<CategoryCommand> recipeCategories = categoryList.stream()
 				.filter(category -> list.contains(category.getId().toString())).collect(Collectors.toList());
@@ -111,5 +110,10 @@ public class RecipeController {
 	// modelAndView.addObject("exception", exception);
 	// return modelAndView;
 	// }
+
+	@ModelAttribute("categoryList")
+	public Flux<CategoryCommand> populateCategoryList() {
+		return categoryService.listAllCategories();
+	}
 
 }

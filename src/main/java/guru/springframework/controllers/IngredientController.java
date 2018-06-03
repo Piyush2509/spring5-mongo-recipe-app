@@ -16,6 +16,7 @@ import guru.springframework.services.IngredientService;
 import guru.springframework.services.RecipeService;
 import guru.springframework.services.UnitOfMeasureService;
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
 
 /**
  * Created by piyush.b.kumar on May 24, 2018.
@@ -67,7 +68,6 @@ public class IngredientController {
 		// init uom
 		ingredientCommand.setUom(new UnitOfMeasureCommand());
 		model.addAttribute("ingredient", ingredientCommand);
-		model.addAttribute("uomList", unitOfMeasureService.listAllUoms());
 		return RECIPE_INGREDIENT_INGREDIENTFORM;
 	}
 
@@ -75,7 +75,6 @@ public class IngredientController {
 	public String updateRecipeIngredient(@PathVariable String recipeId, @PathVariable String id, Model model) {
 		log.debug("Getting ingredient form for update for ingredient id: " + id + " for recipe id: " + recipeId);
 		model.addAttribute("ingredient", ingredientService.findByRecipeIdAndIngredientId(recipeId, id).block());
-		model.addAttribute("uomList", unitOfMeasureService.listAllUoms());
 		return RECIPE_INGREDIENT_INGREDIENTFORM;
 	}
 
@@ -89,8 +88,6 @@ public class IngredientController {
 				log.debug(objectError.toString());
 			});
 
-            model.addAttribute("uomList", unitOfMeasureService.listAllUoms());
-            
 			return RECIPE_INGREDIENT_INGREDIENTFORM;
 		}
 
@@ -105,6 +102,11 @@ public class IngredientController {
 		log.debug("Deleting ingredient id: " + id + " for recipe id: " + recipeId);
 		ingredientService.deleteRecipeIngredient(recipeId, id).block();
 		return "redirect:/recipe/" + recipeId + "/ingredients";
+	}
+
+	@ModelAttribute("uomList")
+	public Flux<UnitOfMeasureCommand> populateUomList() {
+		return unitOfMeasureService.listAllUoms();
 	}
 
 }

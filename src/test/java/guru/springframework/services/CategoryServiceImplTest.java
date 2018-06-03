@@ -6,6 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.Before;
@@ -16,7 +17,8 @@ import org.mockito.MockitoAnnotations;
 import guru.springframework.commands.CategoryCommand;
 import guru.springframework.converters.CategoryToCategoryCommand;
 import guru.springframework.domain.Category;
-import guru.springframework.repositories.CategoryRepository;
+import guru.springframework.repositories.reactive.CategoryReactiveRepository;
+import reactor.core.publisher.Flux;
 
 /**
  * Created by piyush.b.kumar on May 25, 2018.
@@ -28,12 +30,12 @@ public class CategoryServiceImplTest {
 	CategoryService categoryService;
 
 	@Mock
-	CategoryRepository categoryRepository;
+	CategoryReactiveRepository categoryReactiveRepository;
 
 	@Before
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
-		categoryService = new CategoryServiceImpl(categoryRepository, categoryToCategoryCommand);
+		categoryService = new CategoryServiceImpl(categoryReactiveRepository, categoryToCategoryCommand);
 	}
 
 	@Test
@@ -49,12 +51,12 @@ public class CategoryServiceImplTest {
 		categories.add(category2);
 
 		// when
-		when(categoryRepository.findAll()).thenReturn(categories);
-		Set<CategoryCommand> commands = categoryService.listAllCategories();
+		when(categoryReactiveRepository.findAll()).thenReturn(Flux.fromIterable(categories));
+		List<CategoryCommand> commands = categoryService.listAllCategories().collectList().block();
 
 		// then
 		assertEquals(2, commands.size());
-		verify(categoryRepository, times(1)).findAll();
+		verify(categoryReactiveRepository, times(1)).findAll();
 	}
 
 }
