@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import guru.springframework.commands.IngredientCommand;
-import guru.springframework.commands.RecipeCommand;
 import guru.springframework.commands.UnitOfMeasureCommand;
 import guru.springframework.services.IngredientService;
 import guru.springframework.services.RecipeService;
@@ -36,31 +35,27 @@ public class IngredientController {
 	@GetMapping("/recipe/{recipeId}/ingredients")
 	public String listIngredients(@PathVariable String recipeId, Model model) {
 		log.debug("Getting ingredient list for recipe id: " + recipeId);
-		model.addAttribute("recipe", recipeService.findCommandById(recipeId).block());
+		model.addAttribute("recipe", recipeService.findCommandById(recipeId));
 		return "recipe/ingredient/list";
 	}
 
 	@GetMapping("/recipe/{recipeId}/ingredient/{id}/show")
 	public String showRecipeIngredient(@PathVariable String recipeId, @PathVariable String id, Model model) {
 		log.debug("Getting ingredient id: " + id + " for recipe id: " + recipeId);
-		model.addAttribute("ingredient", ingredientService.findByRecipeIdAndIngredientId(recipeId, id).block());
+		model.addAttribute("ingredient", ingredientService.findByRecipeIdAndIngredientId(recipeId, id));
 		return "recipe/ingredient/show";
 	}
 
 	@GetMapping("/recipe/{recipeId}/ingredient/new")
 	public String newRecipeIngredient(@PathVariable String recipeId, Model model) {
 		log.debug("Getting new ingredient for a recipe form");
-		// make sure we have a good recipe id value
-		@SuppressWarnings("unused")
-		RecipeCommand recipeCommand = recipeService.findCommandById(recipeId).block();
-
 		// need to return back parent id for hidden form property
 		IngredientCommand ingredientCommand = new IngredientCommand();
 		ingredientCommand.setRecipeId(recipeId);
 		// init uom
 		ingredientCommand.setUom(new UnitOfMeasureCommand());
 		model.addAttribute("ingredient", ingredientCommand);
-		model.addAttribute("uomList", unitOfMeasureService.listAllUoms().collectList().block());
+		model.addAttribute("uomList", unitOfMeasureService.listAllUoms());
 		return "recipe/ingredient/ingredientform";
 	}
 
@@ -68,7 +63,7 @@ public class IngredientController {
 	public String updateRecipeIngredient(@PathVariable String recipeId, @PathVariable String id, Model model) {
 		log.debug("Getting ingredient form for update for ingredient id: " + id + " for recipe id: " + recipeId);
 		model.addAttribute("ingredient", ingredientService.findByRecipeIdAndIngredientId(recipeId, id).block());
-		model.addAttribute("uomList", unitOfMeasureService.listAllUoms().collectList().block());
+		model.addAttribute("uomList", unitOfMeasureService.listAllUoms());
 		return "recipe/ingredient/ingredientform";
 	}
 
