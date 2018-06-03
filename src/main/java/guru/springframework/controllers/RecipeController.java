@@ -5,12 +5,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.validation.Valid;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,9 +35,16 @@ public class RecipeController {
 
 	private final CategoryService categoryService;
 
+	private WebDataBinder webDataBinder;
+
 	public RecipeController(RecipeService recipeService, CategoryService categoryService) {
 		this.recipeService = recipeService;
 		this.categoryService = categoryService;
+	}
+
+	@InitBinder
+	public void initBinder(WebDataBinder webDataBinder) {
+		this.webDataBinder = webDataBinder;
 	}
 
 	@GetMapping("/recipe/{id}/show")
@@ -58,15 +65,17 @@ public class RecipeController {
 	@GetMapping("/recipe/{id}/update")
 	public String updateRecipe(@PathVariable String id, Model model) {
 		log.debug("Getting recipe form for update for id: " + id);
-		model.addAttribute("recipe", recipeService.findCommandById(id));
+		model.addAttribute("recipe", recipeService.findCommandById(id).block());
 		model.addAttribute("categoryList", categoryService.listAllCategories());
 		return RECIPE_RECIPEFORM_URL;
 	}
 
 	@PostMapping("recipe")
-	public String saveRecipe(@Valid @ModelAttribute("recipe") RecipeCommand command, BindingResult bindingResult,
-			@RequestParam String[] categoryArray) {
+	public String saveRecipe(@ModelAttribute("recipe") RecipeCommand command, @RequestParam(value="categoryArray", required=false) String[] categoryArray) {
 		log.debug("Saving or updating recipe");
+		
+		webDataBinder.validate();
+		BindingResult bindingResult = webDataBinder.getBindingResult(); 
 
 		if (bindingResult.hasErrors()) {
 			bindingResult.getAllErrors().forEach(objectError -> {
